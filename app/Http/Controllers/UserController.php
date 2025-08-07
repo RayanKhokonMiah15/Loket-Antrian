@@ -20,18 +20,18 @@ class UserController extends Controller
 
             // Generate random number antara 1-999
             do {
-                $randomNumber = rand(1, 999);
+                $nextNumber = rand(1, 999);
                 
                 // Cek apakah nomor sudah ada untuk hari ini
                 $exists = Ticket::whereDate('created_at', today())
-                               ->where('number', $randomNumber)
+                               ->where('number', $nextNumber)
                                ->exists();
             } while($exists); // Ulangi jika nomor sudah ada
 
             // Buat ticket baru dengan nomor random
             $ticket = Ticket::create([
                 'prefix' => 'A',
-                'number' => $randomNumber,
+                'number' => $nextNumber,
                 'status' => 'waiting',
                 'created_at' => now(),
                 'updated_at' => now()
@@ -40,7 +40,7 @@ class UserController extends Controller
             \DB::commit();
 
             // Format nomor random untuk ditampilkan (001, 002, dll)
-            $formattedNumber = str_pad($randomNumber, 3, '0', STR_PAD_LEFT);
+            $formattedNumber = str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
 
             return response()->json([
                 'success' => true,
