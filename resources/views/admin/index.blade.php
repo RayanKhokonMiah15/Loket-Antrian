@@ -133,14 +133,33 @@
                                 </div>
                             </td>
                             <td class="text-center">
-                                <form action="{{ route('admin.updateStatus', $ticket) }}" method="POST" class="d-inline">
+                                <form action="{{ route('admin.updateStatus', $ticket) }}" method="POST" class="d-inline status-action-form">
                                     @csrf
                                     @method('PATCH')
-                                    <select name="status" class="form-select form-select-sm status-select" onchange="this.form.submit()">
-                                        <option value="waiting" {{ $ticket->status == 'waiting' ? 'selected' : '' }}>Waiting</option>
-                                        <option value="called" {{ $ticket->status == 'called' ? 'selected' : '' }}>Called</option>
-                                        <option value="done" {{ $ticket->status == 'done' ? 'selected' : '' }}>Done</option>
-                                    </select>
+                                    <input type="hidden" name="status" value="{{ $ticket->status }}" class="status-input">
+                                    <div class="status-button-group" role="group" aria-label="Status actions">
+                                        <button type="button" 
+                                                class="status-btn waiting-btn {{ $ticket->status == 'waiting' ? 'active' : '' }}"
+                                                data-status="waiting"
+                                                onclick="updateStatus(this)">
+                                            <i class="fas fa-clock"></i>
+                                            <span>Waiting</span>
+                                        </button>
+                                        <button type="button" 
+                                                class="status-btn called-btn {{ $ticket->status == 'called' ? 'active' : '' }}"
+                                                data-status="called"
+                                                onclick="updateStatus(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                            <span>Called</span>
+                                        </button>
+                                        <button type="button" 
+                                                class="status-btn done-btn {{ $ticket->status == 'done' ? 'active' : '' }}"
+                                                data-status="done"
+                                                onclick="updateStatus(this)">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Done</span>
+                                        </button>
+                                    </div>
                                 </form>
                             </td>
                         </tr>
@@ -289,6 +308,123 @@
         .table-hover tbody tr:hover {
             background-color: #f7f9f7 !important;
         }
+
+        /* Status Button Styles */
+        .status-button-group {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .status-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 2px solid transparent;
+            background-color: #f8f9fa;
+            color: #666;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .status-btn:hover::before {
+            left: 100%;
+        }
+
+        .status-btn i {
+            font-size: 1rem;
+        }
+
+        /* Waiting Button */
+        .waiting-btn {
+            border-color: var(--ptun-warning);
+            color: #8b5e34;
+        }
+        .waiting-btn:hover, .waiting-btn.active {
+            background-color: var(--ptun-warning);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
+        }
+
+        /* Called Button */
+        .called-btn {
+            border-color: var(--ptun-info);
+            color: var(--ptun-info);
+        }
+        .called-btn:hover, .called-btn.active {
+            background-color: var(--ptun-info);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(64, 145, 108, 0.3);
+        }
+
+        /* Done Button */
+        .done-btn {
+            border-color: var(--ptun-success);
+            color: var(--ptun-success);
+        }
+        .done-btn:hover, .done-btn.active {
+            background-color: var(--ptun-success);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+        }
+
+        /* Active State Pulse Animation */
+        .status-btn.active {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(45, 106, 79, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(45, 106, 79, 0);
+            }
+        }
+
+        /* Status Transition Animation */
+        .status-btn {
+            animation: statusChange 0.3s ease-out;
+        }
+
+        @keyframes statusChange {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 
     <script>
@@ -311,13 +447,68 @@
         updateCurrentTime();
         setInterval(updateCurrentTime, 1000);
 
-        // Add animation to status changes
-        document.querySelectorAll('.status-select').forEach(select => {
-            select.addEventListener('change', function() {
-                this.closest('tr').style.backgroundColor = '#f8f9fc';
-                setTimeout(() => {
-                    this.closest('tr').style.backgroundColor = '';
-                }, 1000);
+        // Function to handle status updates
+        function updateStatus(button) {
+            const form = button.closest('form');
+            const statusInput = form.querySelector('.status-input');
+            const newStatus = button.dataset.status;
+            const row = button.closest('tr');
+            
+            // Update hidden input value
+            statusInput.value = newStatus;
+
+            // Remove active class from all buttons in this group
+            button.parentElement.querySelectorAll('.status-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to clicked button
+            button.classList.add('active');
+
+            // Add transition effect to the row
+            row.style.backgroundColor = '#f8f9fc';
+            setTimeout(() => {
+                row.style.backgroundColor = '';
+            }, 1000);
+
+            // Show loading state
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            // Submit the form
+            form.submit();
+        }
+
+        // Initialize tooltips
+        document.querySelectorAll('.status-btn').forEach(button => {
+            button.addEventListener('mouseover', function() {
+                const status = this.dataset.status;
+                let message = '';
+                
+                switch(status) {
+                    case 'waiting':
+                        message = 'Set status to Waiting';
+                        break;
+                    case 'called':
+                        message = 'Set status to Called';
+                        break;
+                    case 'done':
+                        message = 'Set status to Done';
+                        break;
+                }
+                
+                this.setAttribute('title', message);
+            });
+        });
+
+        // Add sound effect for status changes
+        const statusChangeSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodHRr3ZCKj+a2fLToWI7OIHJ6/LDkmk8LXfH7vi8kGI6KI/k/easclIwSpPt/cqKYkcviN/5xFxAR1PP8vO1kXBHGJHq+L1oUDVjtef0sIxwTRqe4O+0cl87Xrjj6a+GdVIXp+PqqYB0TxC26OypfGNnK8Tj6qZ8ZlBPweTqpHxgTSnH5OyjfGVQSMrm7KN8aFFEyebso31jUEPG5eujfGVRQ8Xk66N9Y1FDxOTro31jUULE5OujfWNRQ8Tj66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTrZGF0YWoGAAA=');
+        statusChangeSound.volume = 0.3;
+
+        document.querySelectorAll('.status-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                if (!button.classList.contains('active')) {
+                    statusChangeSound.play();
+                }
             });
         });
     </script>
