@@ -8,25 +8,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <audio id="notificationSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <script src="{{ asset('js/call-tts.js') }}"></script>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3 col-lg-2 px-0 bg-white sidebar">
-<<<<<<< HEAD
-                <div class="p-3">
-                    <h5 class="text-center mb-4">Menu Antrian</h5>
-                    <a href="{{ route('admin.index') }}" class="sidebar-link {{ request()->routeIs('admin.index') && !request()->get('filter') ? 'active' : '' }}" style="background-color: #10b981; color: #fff;">
-                        Daftar Antrian
-                    </a>
-                    <a href="{{ route('admin.index', ['filter' => 'called']) }}" class="sidebar-link {{ request()->get('filter') == 'called' ? 'active' : '' }}" style="background-color: #2563eb; color: #fff;">
-                        Sedang Dipanggil
-                    </a>
-                    <a href="{{ route('admin.index', ['filter' => 'done']) }}" class="sidebar-link {{ request()->get('filter') == 'done' ? 'active' : '' }}" style="background-color: #64748b; color: #fff;">
-                        Selesai
-                    </a>
-=======
                 <div class="p-3 d-flex flex-column" style="height: 100vh;">
                     <!-- Logo dan Nama Aplikasi -->
                     <div class="text-center mb-4">
@@ -76,7 +64,6 @@
                             </button>
                         </div>
                     </div>
->>>>>>> 764074117e984bc3eb02604f3bcb6e7fff7ec0df
                 </div>
             </div>
 
