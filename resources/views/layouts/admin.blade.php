@@ -68,7 +68,7 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 px-4 py-3">
+            <div class="col-md-9 col-lg-10 px-4 py-3" style="margin-left: 16.66667%;">
                 @yield('content')
             </div>
         </div>
