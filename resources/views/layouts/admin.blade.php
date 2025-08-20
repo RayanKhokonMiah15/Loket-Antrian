@@ -87,15 +87,6 @@
                     const doc = parser.parseFromString(response, 'text/html');
                     const newCount = doc.querySelectorAll('tbody tr').length;
                     
-                    // Jika ada tiket baru
-                    if (newCount > lastCount) {
-                        document.getElementById('notificationSound').play();
-                        const flash = document.createElement('div');
-                        flash.className = 'alert alert-success alert-dismissible fade show';
-                        flash.innerHTML = 'Ada tiket baru! <button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
-                        document.querySelector('.container-fluid').prepend(flash);
-                    }
-                    
                     // Update konten
                     document.querySelector('.card').innerHTML = doc.querySelector('.card').innerHTML;
                     document.querySelector('.row.mb-4').innerHTML = doc.querySelector('.row.mb-4').innerHTML;
@@ -151,7 +142,7 @@
                     document.getElementById('notificationSound').play();
                     const flash = document.createElement('div');
                     flash.className = 'alert alert-success alert-dismissible fade show';
-                    flash.innerHTML = 'Ada tiket baru! <button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+                    flash.innerHTML = '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
                     document.querySelector('.container-fluid').prepend(flash);
                 }
                 document.querySelector('.card').innerHTML = doc.querySelector('.card').innerHTML;

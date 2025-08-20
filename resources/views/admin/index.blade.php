@@ -6,25 +6,13 @@
             <img src="{{ asset('Image/logoptun-removebg-preview.png') }}" alt="PTUN Logo" style="width: 45px; margin-right: 15px;">
             <h1 class="h3 mb-0" style="color: var(--ptun-primary)">Daftar Antrian</h1>
         </div>
-        <div class="d-flex align-items-center bg-light px-3 py-2 rounded-pill shadow-sm">
-            <i class="fas fa-clock me-2" style="color: var(--ptun-primary)"></i>
-            <span class="current-time fw-bold" style="color: var(--ptun-primary)"></span>
-        </div>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" 
-             style="background-color: #d8f3dc; color: var(--ptun-primary); border-color: #b7e4c7;" 
-             role="alert">
-            <i class="fas fa-check-circle me-2"></i>
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+    {{-- Notifikasi success dihilangkan sesuai permintaan --}}
 
     <div class="row mb-4 g-3">
         <div class="col-md-3">
-            <div class="stats-card total-card">
+            <button type="button" class="stats-card total-card w-100 border-0 p-0" style="background:none;" onclick="showStatsModal('all')">
                 <div class="stats-icon">
                     <i class="fas fa-users"></i>
                 </div>
@@ -37,10 +25,10 @@
                         <div class="progress-bar bg-primary" style="width: 100%"></div>
                     </div>
                 </div>
-            </div>
+            </button>
         </div>
         <div class="col-md-3">
-            <div class="stats-card waiting-card">
+            <button type="button" class="stats-card waiting-card w-100 border-0 p-0" style="background:none;" onclick="showStatsModal('waiting')">
                 <div class="stats-icon">
                     <i class="fas fa-clock"></i>
                 </div>
@@ -53,10 +41,10 @@
                         <div class="progress-bar bg-warning" style="width: {{ ($tickets->where('status', 'waiting')->count() / max(1, $tickets->count())) * 100 }}%"></div>
                     </div>
                 </div>
-            </div>
+            </button>
         </div>
         <div class="col-md-3">
-            <div class="stats-card called-card">
+            <button type="button" class="stats-card called-card w-100 border-0 p-0" style="background:none;" onclick="showStatsModal('called')">
                 <div class="stats-icon">
                     <i class="fas fa-volume-up"></i>
                 </div>
@@ -69,10 +57,10 @@
                         <div class="progress-bar bg-info" style="width: {{ ($tickets->where('status', 'called')->count() / max(1, $tickets->count())) * 100 }}%"></div>
                     </div>
                 </div>
-            </div>
+            </button>
         </div>
         <div class="col-md-3">
-            <div class="stats-card done-card">
+            <button type="button" class="stats-card done-card w-100 border-0 p-0" style="background:none;" onclick="showStatsModal('done')">
                 <div class="stats-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
@@ -85,7 +73,7 @@
                         <div class="progress-bar bg-success" style="width: {{ ($tickets->where('status', 'done')->count() / max(1, $tickets->count())) * 100 }}%"></div>
                     </div>
                 </div>
-            </div>
+            </button>
         </div>
     </div>
 
@@ -116,6 +104,7 @@
                     </thead>
                     <tbody>
                         @foreach($tickets as $ticket)
+                        @if($ticket->status !== 'done')
                         <tr>
                             <td class="text-center">
                                 <span class="fw-bold fs-5">{{ $ticket->display_number }}</span>
@@ -163,10 +152,92 @@
                                 </form>
                             </td>
                         </tr>
+                        @endif
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+<!-- Modal Pop Up Statistik -->
+<div class="modal fade" id="statsModal" tabindex="-1" aria-labelledby="statsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="statsModalLabel">Data Antrian</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="statsModalTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center">No. Antrian</th>
+                                <th>Status</th>
+                                <th>Waktu Dibuat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statsModalTableBody">
+                            @foreach($tickets as $ticket)
+                            <tr data-status="{{ $ticket->status }}">
+                                <td class="text-center">
+                                    <span class="fw-bold fs-5">{{ $ticket->display_number }}</span>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-{{ $ticket->status }}">
+                                        <i class="fas fa-{{ $ticket->status == 'waiting' ? 'clock' : ($ticket->status == 'called' ? 'volume-up' : 'check-circle') }} me-1"></i>
+                                        {{ ucfirst($ticket->status) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span class="text-dark">{{ $ticket->created_at->format('d M Y') }}</span>
+                                        <small class="text-muted">{{ $ticket->created_at->format('H:i:s') }}</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+let statsModalInstance = null;
+let statsModalStatus = null;
+let statsModalOpen = false;
+function showStatsModal(status) {
+    const modalEl = document.getElementById('statsModal');
+    if (!statsModalInstance) {
+        statsModalInstance = new bootstrap.Modal(modalEl, {backdrop: 'static', keyboard: false});
+    }
+    statsModalStatus = status;
+    statsModalOpen = true;
+    filterStatsModalRows();
+    // Set judul modal
+    let title = 'Data Antrian';
+    if(status==='waiting') title = 'Data Menunggu';
+    else if(status==='called') title = 'Data Sedang Dipanggil';
+    else if(status==='done') title = 'Data Selesai';
+    else title = 'Data Antrian';
+    document.getElementById('statsModalLabel').textContent = title;
+    statsModalInstance.show();
+}
+function filterStatsModalRows() {
+    const rows = document.querySelectorAll('#statsModalTable tbody tr');
+    rows.forEach(row => {
+        if (statsModalStatus === 'all' || row.getAttribute('data-status') === statsModalStatus) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+</script>
+@endpush
 @endsection
