@@ -3,7 +3,7 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center">
-            <img src="{{ asset('ImageHome/logoptun-removebg-preview.png') }}" alt="PTUN Logo" style="width: 45px; margin-right: 15px;">
+            <img src="{{ asset('Image/logoptun-removebg-preview.png') }}" alt="PTUN Logo" style="width: 45px; margin-right: 15px;">
             <h1 class="h3 mb-0" style="color: var(--ptun-primary)">Daftar Antrian</h1>
         </div>
         <div class="d-flex align-items-center bg-light px-3 py-2 rounded-pill shadow-sm">

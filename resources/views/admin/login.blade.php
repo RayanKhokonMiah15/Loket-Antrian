@@ -11,10 +11,10 @@
     <div class="page-container">
         <div class="login-container">
             <div class="left-section">
-                 <img src="{{ asset('ImageHome/logoptun-removebg-preview.png') }}" alt="PTUN Logo" class="welcome-logo">
+                 <img src="{{ asset('Image/logoptun-removebg-preview.png') }}" alt="PTUN Logo" class="welcome-logo">
                   <h4>Pengadilan Tata Usaha  Negara Bandung</h4>
                 <h1>Let's Get Started</h1>
-                <p>Selamat datang di Loket Antrian PTUN Bandung. Silakan login untuk melanjutkan.</p>
+                <p>Selamat datang di Sistem Informasi Buku Tamu PTUN Bandung. Silakan login untuk melanjutkan.</p>
 
             </div>
             <div class="right-section">

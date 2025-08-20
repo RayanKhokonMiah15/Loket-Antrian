@@ -18,7 +18,7 @@
                 <div class="p-3 d-flex flex-column" style="height: 100vh;">
                     <!-- Logo dan Nama Aplikasi -->
                     <div class="text-center mb-4">
-                        <img src="{{ asset('ImageHome/logoptun-removebg-preview.png') }}" alt="PTUN Logo" class="sidebar-logo mb-2" style="width: 60px;">
+                        <img src="{{ asset('Image/logoptun-removebg-preview.png') }}" alt="PTUN Logo" class="sidebar-logo mb-2" style="width: 60px;">
                         <h5 class="sidebar-title">Menu Antrian</h5>
                     </div>
 
@@ -168,59 +168,5 @@
     </script>
     @stack('scripts')
 
-    <style>
-        /* Style untuk modal logout */
-        .modal-content {
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .modal .btn {
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-
-        .logout-btn {
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            transform: translateX(5px);
-        }
-
-        .sidebar-logo {
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-logo:hover {
-            transform: scale(1.1);
-        }
-
-        /* Animasi untuk modal */
-        .modal.fade .modal-dialog {
-            transition: transform 0.3s ease-out;
-        }
-
-        .modal.show .modal-dialog {
-            transform: none;
-        }
-
-        /* Style untuk sidebar yang lebih menarik */
-        .sidebar {
-            background: linear-gradient(180deg, #1a4731 0%, #2d6a4f 100%);
-        }
-
-        .sidebar-title {
-            color: white;
-            font-weight: 600;
-            margin-bottom: 0;
-        }
-
-        /* Garis pemisah yang lebih halus */
-        .border-top {
-            border-color: rgba(255,255,255,0.1) !important;
-        }
-    </style>
 </body>
 </html>

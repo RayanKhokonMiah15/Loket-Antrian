@@ -15,7 +15,7 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 col-lg-6">
                     <div class="welcome-card">
-                        <img src="{{ asset('storage/image/257d0a10466f13acc3c57bffca06f9cfaee1348deb87229b8f5bedfc6345bf74.png') }}" alt="PTUN Logo" class="header-logo">
+                        <img src="{{ asset('Image/logoptun-removebg-preview.png') }}" alt="PTUN Logo" class="header-logo">
                         <h1 class="display-5 fw-bold text-dark mb-2">Selamat Datang</h1>
                         <div class="divider"></div>
                         <p class="lead text-muted mb-3">Sistem Antrian Pengadilan Tata Usaha Negara  <br>Bandung </p>

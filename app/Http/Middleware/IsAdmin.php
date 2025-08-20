@@ -10,10 +10,16 @@ class IsAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            return $next($request);
+        if (Auth::check()) {
+            if (Auth::user()->role === 'admin') {
+                return $next($request); // ✅ Admin boleh lanjut
+            }
+
+            // ✅ Sudah login tapi bukan admin
+            return redirect()->route('user.index')->withErrors('Anda tidak memiliki akses ke halaman admin.');
         }
 
-        return redirect()->route('admin.login')->withErrors('Anda tidak memiliki akses ke halaman ini.');
+        // ✅ Belum login
+        return redirect()->route('admin.login');
     }
 }

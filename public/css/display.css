@@ -1,0 +1,97 @@
+
+        :root {
+            --ptun-primary: #1a4731;
+            --ptun-secondary: #2d6a4f;
+        }
+
+        body {
+            background-color: var(--ptun-primary);
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .display-container {
+            height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .current-number {
+            background: var(--ptun-secondary);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .number {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        .waiting-list {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .waiting-number {
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .stats-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.5);
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .digital-clock {
+            font-family: 'Digital', monospace;
+            font-size: 2rem;
+            color: #2ecc71;
+        }
+
+        .recently-called {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
