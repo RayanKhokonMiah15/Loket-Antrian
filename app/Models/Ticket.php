@@ -9,12 +9,11 @@ class Ticket extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['prefix', 'number', 'status'];
+    protected $fillable = ['display_number', 'counter_type', 'status'];
 
-    public function getDisplayNumberAttribute()
-    {
-        return $this->prefix . '-' . $this->number;
-    }
+    protected $attributes = [
+        'status' => 'waiting'
+    ];
 
     public const STATUS_WAITING = 'waiting';
     public const STATUS_CALLED = 'called';

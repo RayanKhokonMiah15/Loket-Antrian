@@ -83,13 +83,6 @@
                 <i class="fas fa-clipboard-list me-2"></i>
                 Daftar Antrian Hari Ini
             </h5>
-            <button type="button" class="btn btn-light btn-sm shadow-sm" 
-                    style="background-color: #f8faf8; border: 1px solid #d8f3dc;"
-                    onmouseover="this.style.backgroundColor='var(--ptun-primary)'; this.style.color='white';"
-                    onmouseout="this.style.backgroundColor='#f8faf8'; this.style.color='inherit';"
-                    onclick="window.location.reload()">
-                <i class="fas fa-sync-alt me-1"></i> Refresh Data
-            </button>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -107,13 +100,23 @@
                         @if($ticket->status !== 'done')
                         <tr>
                             <td class="text-center">
-                                <span class="fw-bold fs-5">{{ $ticket->display_number }}</span>
+                                <span class="fw-bold fs-5 counter-{{ $ticket->counter_type }}">{{ $ticket->display_number }}</span>
                             </td>
                             <td>
-                                <span class="status-badge status-{{ $ticket->status }}">
-                                    <i class="fas fa-{{ $ticket->status == 'waiting' ? 'clock' : ($ticket->status == 'called' ? 'volume-up' : 'check-circle') }} me-1"></i>
-                                    {{ ucfirst($ticket->status) }}
-                                </span>
+                                <div class="d-flex align-items-center">
+                                    <span class="status-badge status-{{ $ticket->status }}">
+                                        <i class="fas fa-{{ $ticket->status == 'waiting' ? 'clock' : ($ticket->status == 'called' ? 'volume-up' : 'check-circle') }} me-1"></i>
+                                        {{ ucfirst($ticket->status) }}
+                                    </span>
+                                    <span class="counter-badge counter-{{ $ticket->counter_type }} ms-2">
+                                        <i class="fas fa-{{ 
+                                            $ticket->counter_type == 'A' ? 'file-signature' : 
+                                            ($ticket->counter_type == 'B' ? 'comments' : 
+                                            ($ticket->counter_type == 'C' ? 'file-alt' : 'info-circle')) 
+                                        }} me-1"></i>
+                                        Loket {{ $ticket->counter_type }}
+                                    </span>
+                                </div>
                             </td>
                             <td>
                                 <div class="d-flex flex-column">

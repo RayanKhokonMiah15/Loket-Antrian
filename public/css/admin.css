@@ -90,12 +90,16 @@
 
 /* Theme Colors */
 :root {
-    --ptun-primary: #1a4731;
-    --ptun-secondary: #2d6a4f;
-    --ptun-success: #2d6a4f;
-    --ptun-warning: #d4a373;
-    --ptun-info: #40916c;
-    --ptun-danger: #bc4749;
+    --ptun-primary: #2E7D32;
+    --ptun-secondary: #37474F;
+    --ptun-success: #388E3C;
+    --ptun-warning: #FFA000;
+    --ptun-danger: #D32F2F;
+    --ptun-purple: #6A1B9A;
+    --ptun-info: #1976D2;
+    --ptun-light: #E8F5E9;
+    --header-height: 70px;
+    --sidebar-width: 260px;
 }
 
 .text-primary {
@@ -207,24 +211,28 @@
 
 /* Status Button Styles */
 .status-button-group {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
+    display: inline-flex;
+    background: rgba(46, 125, 50, 0.1);
+    padding: 0.5rem;
+    border-radius: 50px;
+    gap: 0.5rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .status-btn {
+    border: none;
+    background: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 30px;
-    border: 2px solid transparent;
-    background-color: #f8f9fa;
-    color: #666;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    gap: 0.75rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--ptun-primary);
+    min-width: 130px;
+    justify-content: center;
     position: relative;
     overflow: hidden;
 }
@@ -233,92 +241,143 @@
     content: '';
     position: absolute;
     top: 0;
-    left: -100%;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-    );
-    transition: 0.5s;
+    background: linear-gradient(135deg, #2E7D32, #388E3C);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
 }
 
-.status-btn:hover::before {
-    left: 100%;
+.status-btn:hover {
+    color: var(--ptun-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+    background-color: white;
+}
+
+.status-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(46, 125, 50, 0.1);
+}
+
+.status-btn.active {
+    color: white;
+    background: linear-gradient(135deg, #2E7D32, #388E3C);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    transform: translateY(-1px);
+}
+
+.status-btn.active:hover {
+    background: linear-gradient(135deg, #388E3C, #2E7D32);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
 }
 
 .status-btn i {
     font-size: 1rem;
+    transition: transform 0.3s ease;
 }
 
-/* Waiting Button */
-.waiting-btn {
-    border-color: var(--ptun-warning);
-    color: #8b5e34;
-}
-.waiting-btn:hover, .waiting-btn.active {
-    background-color: var(--ptun-warning);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
+.status-btn:hover i {
+    transform: scale(1.2);
 }
 
-/* Called Button */
-.called-btn {
-    border-color: var(--ptun-info);
-    color: var(--ptun-info);
-}
-.called-btn:hover, .called-btn.active {
-    background-color: var(--ptun-info);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(64, 145, 108, 0.3);
-}
-
-/* Done Button */
-.done-btn {
-    border-color: var(--ptun-success);
-    color: var(--ptun-success);
-}
-.done-btn:hover, .done-btn.active {
-    background-color: var(--ptun-success);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
-}
-
-/* Active State Pulse Animation */
-.status-btn.active {
-    animation: pulse 2s infinite;
+.status-btn.active i {
+    animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.4);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(45, 106, 79, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(45, 106, 79, 0);
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
 
-/* Status Transition Animation */
-.status-btn {
-    animation: statusChange 0.3s ease-out;
+/* Enhanced button styles */
+.btn {
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 0.75rem 2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-@keyframes statusChange {
-    0% {
-        transform: scale(0.9);
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn:hover::before {
+    opacity: 1;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn i {
+    transition: transform 0.3s ease;
+}
+
+.btn:hover i {
+    transform: translateX(3px);
+}
+
+/* Success button variants */
+.btn-success {
+    background: linear-gradient(135deg, #2E7D32, #388E3C);
+    border: none;
+    color: white;
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #388E3C, #2E7D32);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
+}
+
+.btn-outline-success {
+    background: transparent;
+    border: 2px solid var(--ptun-primary);
+    color: var(--ptun-primary);
+}
+
+.btn-outline-success:hover {
+    background: linear-gradient(135deg, #2E7D32, #388E3C);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
+}
+
+/* Modern touch effect */
+.btn:active::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+    to {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
     }
 }
 

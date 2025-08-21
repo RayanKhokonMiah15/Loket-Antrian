@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->string('prefix', 1);
-            $table->integer('number')->index();
+            $table->string('display_number')->unique();
+            $table->enum('counter_type', ['A', 'B', 'C', 'D']);
             $table->enum('status', ['waiting', 'called', 'done'])->default('waiting');
             $table->timestamps();
         });

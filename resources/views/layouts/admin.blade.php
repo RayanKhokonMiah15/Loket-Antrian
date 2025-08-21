@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Sistem Antrian</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Admin Panel - PTUN Bandung</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <audio id="notificationSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    
+    <!-- Admin CSS -->
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+
+    <!-- Call TTS Script -->
     <script src="{{ asset('js/call-tts.js') }}"></script>
-</head>
+
+    <!-- Notification Sound -->
+    <audio id="notificationSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -68,16 +81,25 @@
             </div>
 
             <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 px-4 py-3" style="margin-left: 16.66667%;">
-                @yield('content')
+            <div class="col-md-9 col-lg-10 ms-auto">
+                <div class="header">
+                    <button class="btn d-lg-none text-success" id="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                
+                <div class="content-wrapper">
+                    @yield('content')
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        let lastCount = {{ $tickets->count() }};
+        let lastCount = {{ $tickets->count() ?? 0 }};
 
         function refreshTable() {
             $.ajax({

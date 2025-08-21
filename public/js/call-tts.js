@@ -17,30 +17,58 @@
         updateCurrentTime();
         setInterval(updateCurrentTime, 1000);
 
+        // Initialize speech synthesis
+        let synthVoices = [];
+        function loadVoices() {
+            synthVoices = window.speechSynthesis.getVoices();
+        }
+        
+        // Load voices when they're ready
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+        
+        // Initial load
+        loadVoices();
+
         // Function to speak queue number
         function speakQueueNumber(queueNumber) {
             console.log('Memanggil nomor:', queueNumber);
 
-            // Create TTS message
-            const msg = new SpeechSynthesisUtterance();
-            
-            // Set speech properties
-            msg.lang = 'id-ID';
-            msg.rate = 0.9;
-            msg.pitch = 1;
-            msg.volume = 1;
-            msg.text = `Nomor Antrian ${queueNumber}, silakan menuju ke loket`;
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
 
-            // Speak the message
-            window.speechSynthesis.cancel(); // Cancel any ongoing speech
-            window.speechSynthesis.speak(msg);
+            // Create utterance with Indonesian text
+            const utterance = new SpeechSynthesisUtterance();
             
-            // Add event listeners for speech synthesis
-            msg.onstart = () => console.log('Mulai berbicara');
-            msg.onend = () => console.log('Selesai berbicara');
-            msg.onerror = (e) => console.error('Error dalam text-to-speech:', e);
+            // Set a female Microsoft voice
+            const voices = window.speechSynthesis.getVoices();
+            const femaleVoice = voices.find(voice => 
+                (voice.name.includes('Microsoft Zira') || 
+                 voice.name.includes('Google ID Indonesia Female') ||
+                 voice.name.includes('Microsoft Eva'))
+            );
+            
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+            
+            utterance.lang = 'en-US';  // Using English voice for better clarity
+            utterance.rate = 0.9;      // Slightly slower
+            utterance.pitch = 1.2;     // Higher pitch for female voice
+            utterance.volume = 1;
+            
+            // Format nomor antrian untuk pengucapan yang lebih jelas
+            const numberToSpeak = queueNumber.split('').join(' ');
+            utterance.text = `Attention please, Queue number ${numberToSpeak}, please proceed to the counter`;
+
+            // Speak
+            window.speechSynthesis.speak(utterance);
+
+            // Log untuk debugging
+            console.log('Speaking:', utterance.text);
         }
-
+        
         // Function to handle status updates
         function updateStatus(button) {
             const form = button.closest('form');

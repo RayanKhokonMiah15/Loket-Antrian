@@ -9,7 +9,7 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Ticket::whereDate('created_at', today());
+        $query = Ticket::whereDate('created_at', now()->toDateString());
 
         if ($request->get('filter') === 'called') {
             $query->where('status', 'called');
@@ -17,7 +17,7 @@ class AdminController extends Controller
             $query->where('status', 'done');
         }
 
-        $tickets = $query->orderBy('number', 'desc')->get();
+        $tickets = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.index', compact('tickets'));
     }
