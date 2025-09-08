@@ -453,19 +453,36 @@ body {
 @push('scripts')
 <script>
 function getTicket(counterType) {
+    // Disable all ticket buttons while processing
+    document.querySelectorAll('.ticket-button').forEach(btn => btn.disabled = true);
+    
     fetch('/create-ticket', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
         },
         body: JSON.stringify({ counter_type: counterType })
     })
-    .then(response => response.json())
+    .then(async response => {
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Terjadi kesalahan saat membuat nomor antrian');
+        }
+        
+        return data;
+    })
     .then(data => {
-        const modal = new bootstrap.Modal(document.getElementById('ticketModal'));
-        const ticketNumber = document.querySelector('.ticket-number');
-        const counterInfo = document.querySelector('.counter-info');
+        if (!data.success) {
+            throw new Error(data.message || 'Terjadi kesalahan saat membuat nomor antrian');
+        }
+
+        const ticketModal = document.getElementById('ticketModal');
+        const modal = bootstrap.Modal.getInstance(ticketModal) || new bootstrap.Modal(ticketModal);
+        const ticketNumber = ticketModal.querySelector('.ticket-number');
+        const counterInfo = ticketModal.querySelector('.counter-info');
         
         ticketNumber.textContent = data.display_number;
         ticketNumber.style.color = getCounterColor(counterType);
@@ -479,6 +496,14 @@ function getTicket(counterType) {
         
         counterInfo.textContent = `Silakan menuju ke Loket ${counterType} - ${counterNames[counterType]}`;
         modal.show();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert(error.message || 'Maaf, terjadi kesalahan saat membuat nomor antrian. Silakan coba lagi.');
+    })
+    .finally(() => {
+        // Re-enable all ticket buttons
+        document.querySelectorAll('.ticket-button').forEach(btn => btn.disabled = false);
     });
 }
 

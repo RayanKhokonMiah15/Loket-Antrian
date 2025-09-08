@@ -11,17 +11,20 @@ class DisplayController extends Controller
     {
         // Ambil tiket yang sedang dipanggil
         $currentTicket = Ticket::where('status', 'called')
+            ->whereDate('created_at', today())
             ->orderBy('updated_at', 'desc')
             ->first();
 
         // Ambil 5 antrian berikutnya yang sedang menunggu
         $waitingTickets = Ticket::where('status', 'waiting')
+            ->whereDate('created_at', today())
             ->orderBy('created_at', 'asc')
             ->take(5)
             ->get();
 
         // Ambil riwayat 5 antrian yang sudah dipanggil
         $recentlyCalled = Ticket::where('status', 'called')
+            ->whereDate('created_at', today())
             ->orderBy('updated_at', 'desc')
             ->take(5)
             ->get();
@@ -45,20 +48,29 @@ class DisplayController extends Controller
     // Endpoint AJAX untuk update realtime
     public function getUpdates()
     {
+        // Menggunakan query builder yang lebih efisien
+        $today = today();
+        
+        $query = Ticket::select('id', 'display_number', 'status', 'created_at', 'updated_at')
+            ->whereDate('created_at', $today);
+
         $data = [
-            'currentTicket' => Ticket::where('status', 'called')
-                ->orderBy('updated_at', 'desc')
+            'currentTicket' => (clone $query)
+                ->where('status', 'called')
+                ->latest('updated_at')
                 ->first(),
-            'waitingTickets' => Ticket::where('status', 'waiting')
-                ->orderBy('created_at', 'asc')
+            'waitingTickets' => (clone $query)
+                ->where('status', 'waiting')
+                ->oldest('created_at')
                 ->take(5)
                 ->get(),
-            'recentlyCalled' => Ticket::where('status', 'called')
-                ->orderBy('updated_at', 'desc')
+            'recentlyCalled' => (clone $query)
+                ->where('status', 'called')
+                ->latest('updated_at')
                 ->take(5)
                 ->get(),
         ];
 
-        return response()->json($data);
+        return response()->json($data)->header('Cache-Control', 'no-store');
     }
 }

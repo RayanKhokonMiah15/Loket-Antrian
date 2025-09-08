@@ -63,15 +63,18 @@
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': token
                     },
-                    body: JSON.stringify({ prefix: 'A' })
+                    body: JSON.stringify({ counter_type: 'A' })
                 });
 
                 const data = await response.json();
-                showTicketModal(data.ticket);
+                if (data.success) {
+                    showTicketModal(data.display_number);
+                } else {
+                    alert(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
+                }
             } catch (error) {
                 console.error('Error:', error);
-                // Still show modal with a fallback number if there's an error
-                showTicketModal('001');
+                alert('Maaf, terjadi kesalahan saat membuat nomor antrian. Silakan coba lagi.');
             } finally {
                 // Re-enable button and restore text
                 ticketButton.disabled = false;

@@ -1,19 +1,26 @@
-        // Update current time
-        function updateCurrentTime() {
-            const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit' 
-            };
-            document.querySelector('.current-time').textContent = now.toLocaleDateString('id-ID', options);
+    // Update jam digital simpel
+    function updateClock() {
+        const now = new Date();
+        const timeElement = document.getElementById('clock');
+        const dateElement = document.getElementById('date');
+        
+        if (timeElement) {
+            timeElement.textContent = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
         }
-
-        // Update time every second
+        
+        if (dateElement) {
+            dateElement.textContent = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+    }        // Update time every second
         updateCurrentTime();
         setInterval(updateCurrentTime, 1000);
 

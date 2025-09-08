@@ -23,10 +23,10 @@
 
     <style>
         body {
-            background-color: #f8f9fa;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
         .header-logo {
@@ -34,24 +34,9 @@
             margin-bottom: 1rem;
         }
 
-        .divider {
-            width: 50px;
-            height: 3px;
-            background: #0d6efd;
-            margin: 1rem auto;
-            border-radius: 2px;
-        }
-
         .main-content {
-            flex: 1;
-            padding: 2rem 0;
-        }
-
-        footer {
-            background: #333;
-            color: white;
-            padding: 1rem 0;
-            margin-top: auto;
+            min-height: 100vh;
+            width: 100%;
         }
     </style>
 </head>
@@ -59,12 +44,6 @@
     <div class="main-content">
         @yield('content')
     </div>
-
-    <footer class="text-center">
-        <div class="container">
-            <p class="mb-0">&copy; {{ date('Y') }} Pengadilan Tata Usaha Negara Bandung. All rights reserved.</p>
-        </div>
-    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
