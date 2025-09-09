@@ -1,3 +1,35 @@
+/* Sidebar Loket Styles */
+
+.sidebar-link.loket {
+    background: #2E7D32;
+    color: #fff;
+    border-left: 6px solid #1976D2;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, border-left-color 0.2s, color 0.2s;
+    box-shadow: none;
+}
+.sidebar-link.loket:hover {
+    background: #1976D2;
+    color: #fff;
+    border-left-color: #2E7D32;
+    padding-left: 28px;
+}
+.sidebar-link.loket.active {
+    background: #1976D2;
+    color: #fff;
+    border-left-color: #fff;
+}
+.sidebar-link.loket i {
+    color: #fff;
+    margin-right: 12px;
+    font-size: 1.1rem;
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+}
 .sidebar {
     min-height: 100vh;
     background-color: #1a4731;

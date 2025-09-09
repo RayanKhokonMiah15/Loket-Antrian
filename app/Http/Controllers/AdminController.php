@@ -22,6 +22,30 @@ class AdminController extends Controller
         return view('admin.index', compact('tickets'));
     }
 
+    public function loketA(Request $request)
+    {
+        $tickets = Ticket::where('loket', 'A')->whereDate('created_at', now()->toDateString())->orderBy('created_at', 'desc')->get();
+        return view('admin.loketA', compact('tickets'));
+    }
+
+    public function loketB(Request $request)
+    {
+        $tickets = Ticket::where('loket', 'B')->whereDate('created_at', now()->toDateString())->orderBy('created_at', 'desc')->get();
+        return view('admin.loketB', compact('tickets'));
+    }
+
+    public function loketC(Request $request)
+    {
+        $tickets = Ticket::where('loket', 'C')->whereDate('created_at', now()->toDateString())->orderBy('created_at', 'desc')->get();
+        return view('admin.loketC', compact('tickets'));
+    }
+
+    public function loketD(Request $request)
+    {
+        $tickets = Ticket::where('loket', 'D')->whereDate('created_at', now()->toDateString())->orderBy('created_at', 'desc')->get();
+        return view('admin.loketD', compact('tickets'));
+    }
+
     public function updateStatus(Request $request, Ticket $ticket)
     {
         // Validasi & fallback supaya tidak pernah NULL

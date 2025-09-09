@@ -37,8 +37,32 @@
 
                     <!-- Menu Links -->
                     <div class="flex-grow-1">
-                        <a href="{{ route('admin.index') }}" class="sidebar-link {{ request()->routeIs('admin.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.index') }}" class="sidebar-link loket {{ request()->routeIs('admin.index') ? 'active' : '' }}">
                             <i class="fas fa-list-ul me-2"></i> Daftar Antrian
+                        </a>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <a href="{{ route('admin.loket.loketA') }}" class="sidebar-link loket {{ request()->routeIs('admin.loket.loketA') ? 'active' : '' }}">
+                            <i class="fas fa-list-ul me-2"></i> Loket A
+                        </a>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <a href="{{ route('admin.loket.loketB') }}" class="sidebar-link loket {{ request()->routeIs('admin.loket.loketB') ? 'active' : '' }}">
+                            <i class="fas fa-list-ul me-2"></i> Loket B
+                        </a>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <a href="{{ route('admin.loket.loketC') }}" class="sidebar-link loket {{ request()->routeIs('admin.loket.loketC') ? 'active' : '' }}">
+                            <i class="fas fa-list-ul me-2"></i> Loket C
+                        </a>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <a href="{{ route('admin.loket.loketD') }}" class="sidebar-link loket {{ request()->routeIs('admin.loket.loketD') ? 'active' : '' }}">
+                            <i class="fas fa-list-ul me-2"></i> Loket D
                         </a>
                     </div>
 
