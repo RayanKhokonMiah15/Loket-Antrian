@@ -39,42 +39,35 @@ class UserController extends Controller
                     $ticket = DB::transaction(function() use ($request) {
                         $counterType = $request->counter_type;
                         $today = now()->toDateString();
-                        
-                        // Gunakan cache untuk nomor terakhir jika tersedia
-                        $cacheKey = "last_number_{$counterType}_{$today}";
-                        $lastNumber = cache()->remember($cacheKey, now()->endOfDay(), function() use ($counterType, $today) {
-                            return Ticket::where('counter_type', $counterType)
-                                ->whereDate('created_at', $today)
-                                ->max('number') ?? 0;
-                        });
-                        
+
+                        // Ambil nomor terbesar dari database
+                        $lastNumber = Ticket::where('counter_type', $counterType)
+                            ->whereDate('created_at', $today)
+                            ->max('number') ?? 0;
+
                         // Increment nomor
                         $number = $lastNumber + 1;
-                        
+
                         // Format nomor display (contoh: A001)
                         $displayNumber = $counterType . str_pad($number, 3, '0', STR_PAD_LEFT);
-                        
-                        // Buat tiket baru dengan eager loading
+
+                        // Buat tiket baru
                         $ticket = Ticket::create([
                             'display_number' => $displayNumber,
                             'counter_type' => $counterType,
                             'status' => 'waiting',
                             'number' => $number
                         ]);
-                        
-                        // Update cache
-                        cache()->put($cacheKey, $number, now()->endOfDay());
-                        
+
                         return $ticket;
-                    }, 3); // Retry 3 kali jika terjadi deadlock
-                    
-                    break; // Keluar dari loop jika berhasil
+                    }, 3);
+                    break;
                 } catch (\Exception $e) {
                     if ($attempt === $maxAttempts) {
                         throw $e;
                     }
                     $attempt++;
-                    usleep(50000); // Tunggu 50ms sebelum mencoba lagi
+                    usleep(50000);
                 }
             }
 
