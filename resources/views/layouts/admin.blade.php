@@ -270,17 +270,25 @@
         }
 
         function refreshTable() {
+            // Ambil loket yang aktif dari tombol sidebar
+            let loket = 'all';
+            const activeBtn = document.querySelector('.loket-filter.active');
+            if (activeBtn && activeBtn.dataset.loket && activeBtn.dataset.loket !== 'all') {
+                loket = activeBtn.dataset.loket;
+            }
+            let url = '{{ route("admin.index") }}';
+            if (loket !== 'all') {
+                url += '?loket=' + loket;
+            }
             $.ajax({
-                url: '{{ route("admin.index") }}',
+                url: url,
                 success: function(response) {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(response, 'text/html');
                     const newCount = doc.querySelectorAll('tbody tr').length;
-                    
                     // Update konten
                     document.querySelector('.card').innerHTML = doc.querySelector('.card').innerHTML;
                     document.querySelector('.row.mb-4').innerHTML = doc.querySelector('.row.mb-4').innerHTML;
-                    
                     lastCount = newCount;
                 }
             });

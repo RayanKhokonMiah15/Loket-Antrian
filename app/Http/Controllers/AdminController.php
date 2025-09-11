@@ -11,10 +11,16 @@ class AdminController extends Controller
     {
         $query = Ticket::whereDate('created_at', now()->toDateString());
 
+        // Filter status jika ada
         if ($request->get('filter') === 'called') {
             $query->where('status', 'called');
         } elseif ($request->get('filter') === 'done') {
             $query->where('status', 'done');
+        }
+
+        // Filter loket jika ada
+        if ($request->has('loket') && in_array($request->get('loket'), ['A','B','C','D'])) {
+            $query->where('loket', $request->get('loket'));
         }
 
         $tickets = $query->orderBy('created_at', 'desc')->get();

@@ -56,7 +56,8 @@ class UserController extends Controller
                             'display_number' => $displayNumber,
                             'counter_type' => $counterType,
                             'status' => 'waiting',
-                            'number' => $number
+                            'number' => $number,
+                            'loket' => $counterType
                         ]);
 
                         return $ticket;
