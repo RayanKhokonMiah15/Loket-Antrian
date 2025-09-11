@@ -8,9 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->string('display_number')->nullable()->after('id');
-        });
+    // Kolom display_number sudah ada, tidak perlu ditambah lagi
     }
 
     public function down()

@@ -68,7 +68,7 @@
             // Format nomor antrian untuk pengucapan yang lebih jelas
             const numberToSpeak = queueNumber.split('').join(' ');
             const loket = queueNumber.charAt(0);
-            utterance.text = `Perhatian, nomor antrian ${queueNumber}, silakan menuju loket ${loket}`;
+            utterance.text = `nomor antrian ${queueNumber}, silakan menuju loket ${loket}`;
 
             // Speak
             window.speechSynthesis.speak(utterance);
