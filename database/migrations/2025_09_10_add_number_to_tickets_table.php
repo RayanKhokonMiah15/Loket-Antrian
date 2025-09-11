@@ -9,17 +9,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->integer('number')->after('display_number')->nullable();
+            $table->string('display_number')->nullable()->after('id');
         });
-
-        // Update existing records
-        DB::statement('UPDATE tickets SET number = CAST(SUBSTRING(display_number, 2) AS UNSIGNED)');
     }
 
     public function down()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->dropColumn('number');
+            $table->dropColumn('display_number');
         });
     }
 };

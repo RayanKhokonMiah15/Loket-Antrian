@@ -18,7 +18,7 @@ Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.
 Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 // ✅ Protected admin routes
-Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
+Route::prefix('admin')->middleware(['is_admin'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::patch('/tickets/{ticket}/status', [AdminController::class, 'updateStatus'])->name('admin.updateStatus');
 
@@ -28,6 +28,7 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/loket/c', [AdminController::class, 'loketC'])->name('admin.loket.loketC');
     Route::get('/loket/d', [AdminController::class, 'loketD'])->name('admin.loket.loketD');
 });
+
 
 //Display routes
 Route::get('/display', [DisplayController::class, 'index'])->name('display.index');
