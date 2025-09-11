@@ -23,32 +23,32 @@ class AdminController extends Controller
             $query->where('loket', $request->get('loket'));
         }
 
-        $tickets = $query->orderBy('created_at', 'desc')->get();
+        $tickets = $query->orderBy('number', 'asc')->get(); // Diubah untuk mengurutkan berdasarkan 'number' secara ascending
 
         return view('admin.index', compact('tickets'));
     }
 
     public function loketA(Request $request)
     {
-        $tickets = Ticket::where('loket', 'A')->whereDate('created_at', now()->toDateString())->orderBy('created_at', 'desc')->get();
+        $tickets = Ticket::where('loket', 'A')->whereDate('created_at', now()->toDateString())->orderBy('number', 'asc')->get(); // Diubah untuk mengurutkan berdasarkan 'number' secara ascending
         return view('admin.loketA', compact('tickets'));
     }
 
     public function loketB(Request $request)
     {
-        $tickets = Ticket::where('loket', 'B')->whereDate('created_at', now()->toDateString())->orderBy('created_at', 'desc')->get();
+        $tickets = Ticket::where('loket', 'B')->whereDate('created_at', now()->toDateString())->orderBy('number', 'asc')->get(); // Diubah untuk mengurutkan berdasarkan 'number' secara ascending
         return view('admin.loketB', compact('tickets'));
     }
 
     public function loketC(Request $request)
     {
-        $tickets = Ticket::where('loket', 'C')->whereDate('created_at', now()->toDateString())->orderBy('created_at', 'desc')->get();
+        $tickets = Ticket::where('loket', 'C')->whereDate('created_at', now()->toDateString())->orderBy('number', 'asc')->get(); // Diubah untuk mengurutkan berdasarkan 'number' secara ascending
         return view('admin.loketC', compact('tickets'));
     }
 
     public function loketD(Request $request)
     {
-        $tickets = Ticket::where('loket', 'D')->whereDate('created_at', now()->toDateString())->orderBy('created_at', 'desc')->get();
+        $tickets = Ticket::where('loket', 'D')->whereDate('created_at', now()->toDateString())->orderBy('number', 'asc')->get(); // Diubah untuk mengurutkan berdasarkan 'number' secara ascending
         return view('admin.loketD', compact('tickets'));
     }
 
