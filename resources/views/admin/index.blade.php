@@ -78,15 +78,17 @@
     </div>
 
     <div class="card shadow">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0" style="color: var(--ptun-primary); font-weight: 600;">
-                <i class="fas fa-clipboard-list me-2"></i>
-                Daftar Antrian Hari Ini
-            </h5>
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0" style="color: var(--ptun-primary); font-weight: 600;">
+                    <i class="fas fa-clipboard-list me-2"></i>
+                    Daftar Antrian Hari Ini
+                </h5>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle" id="queueTable">
                     <thead class="table-light">
                         <tr>
                             <th class="text-center">No. Antrian</th>
@@ -211,9 +213,90 @@
 
 @push('scripts')
 <script>
+// Inisialisasi variabel untuk modal
 let statsModalInstance = null;
 let statsModalStatus = null;
 let statsModalOpen = false;
+
+// Fungsi untuk filter tabel
+function applyFilters() {
+    const loket = document.getElementById('filterLoket').value;
+    const status = document.getElementById('filterStatus').value;
+    const search = document.getElementById('searchNumber').value.toLowerCase();
+    
+    const rows = document.querySelectorAll('#queueTable tbody tr');
+    
+    rows.forEach(row => {
+        const ticketNumber = row.querySelector('td:first-child span').textContent.toLowerCase();
+        const statusCell = row.querySelector('.status-badge').textContent.trim().toLowerCase();
+        const loketBadge = row.querySelector('.counter-badge').textContent.trim();
+        const loketType = loketBadge.includes('Loket A') ? 'A' :
+                         loketBadge.includes('Loket B') ? 'B' :
+                         loketBadge.includes('Loket C') ? 'C' :
+                         loketBadge.includes('Loket D') ? 'D' : '';
+        
+        const matchesLoket = !loket || loketType === loket;
+        const matchesStatus = !status || statusCell.includes(status);
+        const matchesSearch = !search || ticketNumber.includes(search);
+        
+        row.style.display = matchesLoket && matchesStatus && matchesSearch ? '' : 'none';
+    });
+    
+    updateFilterCounts();
+}
+
+function resetFilters() {
+    document.getElementById('filterLoket').value = '';
+    document.getElementById('filterStatus').value = '';
+    document.getElementById('searchNumber').value = '';
+    
+    const rows = document.querySelectorAll('#queueTable tbody tr');
+    rows.forEach(row => row.style.display = '');
+    
+    updateFilterCounts();
+}
+
+function updateFilterCounts() {
+    const visibleRows = document.querySelectorAll('#queueTable tbody tr:not([style*="display: none"])');
+    const total = visibleRows.length;
+    const waiting = Array.from(visibleRows).filter(row => 
+        row.querySelector('.status-badge').textContent.toLowerCase().includes('waiting')).length;
+    const called = Array.from(visibleRows).filter(row => 
+        row.querySelector('.status-badge').textContent.toLowerCase().includes('called')).length;
+    const done = Array.from(visibleRows).filter(row => 
+        row.querySelector('.status-badge').textContent.toLowerCase().includes('done')).length;
+    
+    // Update statistik cards
+    updateStatsCard('total', total);
+    updateStatsCard('waiting', waiting);
+    updateStatsCard('called', called);
+    updateStatsCard('done', done);
+}
+
+function updateStatsCard(type, count) {
+    const card = document.querySelector(`.${type}-card .stats-info h3`);
+    if (card) {
+        card.textContent = count;
+    }
+}
+
+// Event listeners untuk input fields
+document.getElementById('searchNumber').addEventListener('input', debounce(applyFilters, 300));
+document.getElementById('filterLoket').addEventListener('change', applyFilters);
+document.getElementById('filterStatus').addEventListener('change', applyFilters);
+
+// Fungsi debounce untuk mencegah terlalu banyak request
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 function showStatsModal(status) {
     const modalEl = document.getElementById('statsModal');
     if (!statsModalInstance) {

@@ -453,17 +453,37 @@ body {
 @push('scripts')
 <script>
 function getTicket(counterType) {
-    // Disable all ticket buttons while processing
-    document.querySelectorAll('.ticket-button').forEach(btn => btn.disabled = true);
+    // Menggunakan variabel untuk tracking request yang sedang berjalan
+    if (window.ticketRequestInProgress) {
+        return;
+    }
+
+    // Disable tombol yang diklik saja
+    const clickedButton = document.querySelector(`.counter-card[data-counter="${counterType}"] .ticket-button`);
+    clickedButton.disabled = true;
+    
+    // Tambahkan loading state
+    clickedButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memproses...';
+    
+    window.ticketRequestInProgress = true;
+    
+    // Cache CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    
+    // Gunakan timeout untuk membatalkan request yang terlalu lama
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 detik timeout
     
     fetch('/create-ticket', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json'
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache'
         },
-        body: JSON.stringify({ counter_type: counterType })
+        body: JSON.stringify({ counter_type: counterType }),
+        signal: controller.signal
     })
     .then(async response => {
         const data = await response.json();
@@ -499,11 +519,19 @@ function getTicket(counterType) {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert(error.message || 'Maaf, terjadi kesalahan saat membuat nomor antrian. Silakan coba lagi.');
+        if (error.name === 'AbortError') {
+            alert('Waktu permintaan habis. Silakan coba lagi.');
+        } else {
+            alert(error.message || 'Maaf, terjadi kesalahan saat membuat nomor antrian. Silakan coba lagi.');
+        }
     })
     .finally(() => {
-        // Re-enable all ticket buttons
-        document.querySelectorAll('.ticket-button').forEach(btn => btn.disabled = false);
+        clearTimeout(timeoutId);
+        window.ticketRequestInProgress = false;
+        
+        // Reset tombol ke kondisi awal
+        clickedButton.disabled = false;
+        clickedButton.innerHTML = '<i class="fas fa-ticket-alt me-2"></i>Ambil Nomor';
     });
 }
 

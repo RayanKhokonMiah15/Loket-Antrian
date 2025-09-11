@@ -9,7 +9,7 @@ class Ticket extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['display_number', 'counter_type', 'status'];
+    protected $fillable = ['display_number', 'counter_type', 'status', 'number'];
 
     protected $attributes = [
         'status' => 'waiting'
