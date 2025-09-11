@@ -7,8 +7,10 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\DisplayController;
 
 // ✅ User routes
-Route::get('/', [UserController::class, 'index'])->name('user.index');
-Route::post('/create-ticket', [UserController::class, 'createTicket'])->name('user.create-ticket');
+Route::middleware(['web'])->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('user.index');
+    Route::post('/create-ticket', [UserController::class, 'createTicket'])->name('user.create-ticket');
+});
 
 // ✅ Admin login routes
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');

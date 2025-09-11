@@ -37,33 +37,57 @@
 
                     <!-- Menu Links -->
                     <div class="flex-grow-1">
-                        <a href="{{ route('admin.index') }}" class="sidebar-link loket {{ request()->routeIs('admin.index') ? 'active' : '' }}">
-                            <i class="fas fa-list-ul me-2"></i> Daftar Antrian
-                        </a>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <a href="{{ route('admin.loket.loketA') }}" class="sidebar-link loket {{ request()->routeIs('admin.loket.loketA') ? 'active' : '' }}">
-                            <i class="fas fa-list-ul me-2"></i> Loket A
-                        </a>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <a href="{{ route('admin.loket.loketB') }}" class="sidebar-link loket {{ request()->routeIs('admin.loket.loketB') ? 'active' : '' }}">
-                            <i class="fas fa-list-ul me-2"></i> Loket B
-                        </a>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <a href="{{ route('admin.loket.loketC') }}" class="sidebar-link loket {{ request()->routeIs('admin.loket.loketC') ? 'active' : '' }}">
-                            <i class="fas fa-list-ul me-2"></i> Loket C
-                        </a>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <a href="{{ route('admin.loket.loketD') }}" class="sidebar-link loket {{ request()->routeIs('admin.loket.loketD') ? 'active' : '' }}">
-                            <i class="fas fa-list-ul me-2"></i> Loket D
-                        </a>
+                        <div class="sidebar-menu">
+                            <a href="{{ route('admin.index') }}" class="sidebar-link {{ request()->routeIs('admin.index') ? 'active' : '' }}">
+                                <i class="fas fa-home me-2"></i> Dashboard
+                            </a>
+                            
+                            <!-- Filter Section -->
+                            <div class="filter-section mt-3">
+                                <div class="filter-header mb-2 px-3">
+                                    <span class="filter-title">
+                                        <i class="fas fa-filter me-2"></i>Filter Loket
+                                    </span>
+                                </div>
+                                <div class="filter-container px-2">
+                                    <button class="loket-filter d-flex align-items-center justify-content-between w-100 active" id="allLoketToggle" data-loket="all">
+                                        <div class="d-flex align-items-center">
+                                            <div class="filter-icon">
+                                                <i class="fas fa-list-ul"></i>
+                                            </div>
+                                            <div class="filter-text">Semua Loket</div>
+                                        </div>
+                                        <i class="fas fa-chevron-down toggle-icon"></i>
+                                    </button>
+                                    <div id="loketOptions" class="collapse mt-2">
+                                        <button class="loket-filter d-flex align-items-center" data-loket="A">
+                                            <div class="filter-icon">
+                                                <i class="fas fa-file-signature"></i>
+                                            </div>
+                                            <div class="filter-text">Loket A</div>
+                                        </button>
+                                        <button class="loket-filter d-flex align-items-center" data-loket="B">
+                                            <div class="filter-icon">
+                                                <i class="fas fa-comments"></i>
+                                            </div>
+                                            <div class="filter-text">Loket B</div>
+                                        </button>
+                                        <button class="loket-filter d-flex align-items-center" data-loket="C">
+                                            <div class="filter-icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div class="filter-text">Loket C</div>
+                                        </button>
+                                        <button class="loket-filter d-flex align-items-center" data-loket="D">
+                                            <div class="filter-icon">
+                                                <i class="fas fa-info-circle"></i>
+                                            </div>
+                                            <div class="filter-text">Loket D</div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Logout Section -->
@@ -124,6 +148,126 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         let lastCount = {{ $tickets->count() ?? 0 }};
+        
+        // Setup collapsible filter with animation
+        const allLoketToggle = document.getElementById('allLoketToggle');
+        const loketOptions = document.getElementById('loketOptions');
+        
+        // Add ripple effect function
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            
+            const rect = button.getBoundingClientRect();
+            
+            ripple.style.width = ripple.style.height = `${diameter}px`;
+            ripple.style.left = `${event.clientX - rect.left - radius}px`;
+            ripple.style.top = `${event.clientY - rect.top - radius}px`;
+            ripple.className = 'ripple';
+            
+            // Remove existing ripples
+            const existingRipple = button.getElementsByClassName('ripple')[0];
+            if (existingRipple) {
+                existingRipple.remove();
+            }
+            
+            button.appendChild(ripple);
+            
+            // Remove ripple after animation
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+        
+        allLoketToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            // Add ripple effect
+            createRipple(e);
+            
+            // Toggle the collapse state with animation
+            this.setAttribute('aria-expanded', !isExpanded);
+            
+            if (!isExpanded) {
+                // Expanding animation
+                loketOptions.style.maxHeight = '0px';
+                loketOptions.classList.add('show');
+                setTimeout(() => {
+                    loketOptions.style.maxHeight = loketOptions.scrollHeight + 'px';
+                }, 10);
+            } else {
+                // Collapsing animation
+                loketOptions.style.maxHeight = loketOptions.scrollHeight + 'px';
+                setTimeout(() => {
+                    loketOptions.style.maxHeight = '0px';
+                }, 10);
+                setTimeout(() => {
+                    loketOptions.classList.remove('show');
+                }, 300);
+            }
+            
+            // If this is a filter click (not just expand/collapse)
+            if (!e.target.classList.contains('toggle-icon')) {
+                filterByLoket('all');
+                document.querySelectorAll('.loket-filter').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            }
+        });
+
+        // Event listener untuk filter buttons dalam loketOptions
+        document.querySelectorAll('#loketOptions .loket-filter').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Hapus kelas active dari semua buttons
+                document.querySelectorAll('.loket-filter').forEach(b => b.classList.remove('active'));
+                
+                // Tambah kelas active ke button yang diklik
+                this.classList.add('active');
+                
+                // Terapkan filter
+                const loket = this.dataset.loket;
+                filterByLoket(loket);
+            });
+        });
+
+        function filterByLoket(loket) {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const ticketNumber = row.querySelector('td:first-child').textContent.trim();
+                if (loket === 'all') {
+                    row.style.display = '';
+                } else {
+                    // Extract loket type from ticket number (A1, B1, C1, etc.)
+                    const ticketLoket = ticketNumber.charAt(0);
+                    row.style.display = (ticketLoket === loket) ? '' : 'none';
+                }
+            });
+            
+            // Update statistik setelah filter
+            updateStats();
+        }
+        
+        function updateStats() {
+            const visibleRows = document.querySelectorAll('tbody tr:not([style*="display: none"])');
+            const total = visibleRows.length;
+            const waiting = Array.from(visibleRows).filter(row => 
+                row.querySelector('.status-badge').textContent.toLowerCase().includes('waiting')).length;
+            const called = Array.from(visibleRows).filter(row => 
+                row.querySelector('.status-badge').textContent.toLowerCase().includes('called')).length;
+            const done = Array.from(visibleRows).filter(row => 
+                row.querySelector('.status-badge').textContent.toLowerCase().includes('done')).length;
+            
+            // Update statistik cards
+            document.querySelector('.total-card .stats-info h3').textContent = total;
+            document.querySelector('.waiting-card .stats-info h3').textContent = waiting;
+            document.querySelector('.called-card .stats-info h3').textContent = called;
+            document.querySelector('.done-card .stats-info h3').textContent = done;
+        }
 
         function refreshTable() {
             $.ajax({
