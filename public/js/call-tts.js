@@ -1,4 +1,4 @@
-    // Update jam digital simpel
+// Update jam digital simpel
     function updateClock() {
         const now = new Date();
         const timeElement = document.getElementById('clock');
@@ -67,7 +67,8 @@
             
             // Format nomor antrian untuk pengucapan yang lebih jelas
             const numberToSpeak = queueNumber.split('').join(' ');
-            utterance.text = `Perhatian, nomor antrian ${numberToSpeak}, silakan menuju loket`;
+            const loket = queueNumber.charAt(0);
+            utterance.text = `Perhatian, nomor antrian ${queueNumber}, silakan menuju loket ${loket}`;
 
             // Speak
             window.speechSynthesis.speak(utterance);
@@ -136,8 +137,7 @@
         });
 
         // Add sound effect for status changes
-        const statusChangeSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodHRr3ZCKj+a2fLToWI7OIHJ6/LDkmk8LXfH7vi8kGI6KI/k/easclIwSpPt/cqKYkcviN/5xFxAR1PP8vO1kXBHGJHq+L1oUDVjtef0sIxwTRqe4O+0cl87Xrjj6a+GdVIXp+PqqYB0TxC26OypfGNnK8Tj6qZ8ZlBPweTqpHxgTSnH5OyjfGVQSMrm7KN8aFFEyebso31jUEPG5eujfGVRQ8Xk66N9Y1FDxOTro31jUULE5OujfWNRQ8Tj66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTro31jUUPE5OujfWNRQ8Tk66N9Y1FDxOTrZGF0YWoGAAA=');
-        statusChangeSound.volume = 0.3;
+        const statusChangeSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodHRr3ZCKj+a2fLToWI7OIHJ6/LDkmk8LXfH7vi8kGI6KI/k/easc');
 
         document.querySelectorAll('.status-btn').forEach(button => {
             button.addEventListener('click', () => {
