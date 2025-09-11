@@ -59,15 +59,15 @@
             if (femaleVoice) {
                 utterance.voice = femaleVoice;
             }
-            
-            utterance.lang = 'en-US';  // Using English voice for better clarity
+
+            utterance.lang = 'id-ID';  // Using Indonesian voice for better clarity
             utterance.rate = 0.9;      // Slightly slower
             utterance.pitch = 1.2;     // Higher pitch for female voice
             utterance.volume = 1;
             
             // Format nomor antrian untuk pengucapan yang lebih jelas
             const numberToSpeak = queueNumber.split('').join(' ');
-            utterance.text = `Attention please, Queue number ${numberToSpeak}, please proceed to the counter`;
+            utterance.text = `Perhatian, nomor antrian ${numberToSpeak}, silakan menuju loket`;
 
             // Speak
             window.speechSynthesis.speak(utterance);
